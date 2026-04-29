@@ -78,8 +78,8 @@ const AdminDashboard = () => {
 
             <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', marginBottom: '2rem' }}>
                 <h3 style={{ marginTop: 0, marginBottom: '1.5rem', color: '#0f172a' }}>Post Statistics</h3>
-                <div style={{ height: '300px' }}>
-                    <ResponsiveContainer width="100%" height="100%">
+                <div style={{ height: '300px', width: '100%' }}>
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                         <BarChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} />
                             <XAxis dataKey="name" axisLine={false} tickLine={false} />

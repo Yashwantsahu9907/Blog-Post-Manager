@@ -2,7 +2,10 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import { getPost, createPost, updatePost } from '../api/postService';
+import { uploadProfileImage } from '../api/authService';
 import { AuthContext } from '../context/AuthContext';
 
 const PostForm = () => {
@@ -12,14 +15,72 @@ const PostForm = () => {
     const isEditMode = Boolean(id);
     const [loading, setLoading] = useState(false);
 
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
         defaultValues: {
             status: 'Draft',
             tags: '',
             authorName: user?.name || '',
             email: user?.email || '',
+            content: '',
         }
     });
+
+    const quillContent = watch('content');
+
+    const imageHandler = () => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            if (file) {
+                try {
+                    toast.loading('Uploading image...', { id: 'quill-upload' });
+                    const imageUrl = await uploadProfileImage(file);
+                    
+                    const quill = quillRef.current.getEditor();
+                    const range = quill.getSelection();
+                    quill.insertEmbed(range.index, 'image', imageUrl);
+                    
+                    toast.success('Image uploaded', { id: 'quill-upload' });
+                } catch (error) {
+                    toast.error('Failed to upload image', { id: 'quill-upload' });
+                }
+            }
+        };
+    };
+
+    const handleQuillChange = (content) => {
+        setValue('content', content === '<p><br></p>' ? '' : content);
+    };
+
+    const quillModules = React.useMemo(() => ({
+        toolbar: {
+            container: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+                ['link', 'image', 'code-block'],
+                ['clean']
+            ],
+            handlers: {
+                image: imageHandler
+            }
+        }
+    }), []);
+
+    const quillFormats = [
+        'header',
+        'bold', 'italic', 'underline', 'strike', 'blockquote',
+        'list', 'indent',
+        'link', 'image', 'code-block'
+    ];
+
+    useEffect(() => {
+        register('content', { required: 'Content is required' });
+    }, [register]);
 
     useEffect(() => {
         if (isEditMode) {
@@ -66,6 +127,8 @@ const PostForm = () => {
             setLoading(false);
         }
     };
+
+    const quillRef = React.useRef(null);
 
     return (
         <div className="animate-fade-in" style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -180,13 +243,19 @@ const PostForm = () => {
                     </div>
                     <div className="form-group">
                         <label className="form-label">Full Content</label>
-                        <textarea 
-                            className="form-control" 
-                            rows="10" 
-                            placeholder="Write your post content here..."
-                            {...register('content', { required: 'Content is required' })} 
-                        ></textarea>
-                        {errors.content && <span className="form-error">{errors.content.message}</span>}
+                        <div style={{ backgroundColor: 'white', minHeight: '300px' }}>
+                            <ReactQuill 
+                                ref={quillRef}
+                                theme="snow"
+                                value={quillContent || ''}
+                                onChange={handleQuillChange}
+                                modules={quillModules}
+                                formats={quillFormats}
+                                placeholder="Write your post content here..."
+                                style={{ height: '350px', marginBottom: '45px' }}
+                            />
+                        </div>
+                        {errors.content && <span className="form-error" style={{ display: 'block', marginTop: '10px' }}>{errors.content.message}</span>}
                     </div>
                 </div>
 

@@ -181,3 +181,56 @@ input, textarea, select {
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
 }
+
+/* Rich Text Content Styling */
+.post-content h1, .post-content h2, .post-content h3 {
+  margin: 1.5rem 0 1rem 0;
+  color: var(--text-primary);
+}
+
+.post-content p {
+  margin-bottom: 1rem;
+}
+
+.post-content ul, .post-content ol {
+  margin: 0 0 1rem 1.5rem;
+}
+
+.post-content li {
+  margin-bottom: 0.5rem;
+}
+
+.post-content blockquote {
+  border-left: 4px solid var(--border-color);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin: 1.5rem 0;
+}
+
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin: 1.5rem 0;
+}
+
+.post-content pre {
+  background-color: #1f2937;
+  color: #f3f4f6;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.post-content a {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.ql-editor {
+  font-size: 0.875rem;
+  font-family: inherit !important;
+}

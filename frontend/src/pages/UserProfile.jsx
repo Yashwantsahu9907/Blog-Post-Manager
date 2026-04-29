@@ -114,7 +114,7 @@ const UserProfile = () => {
                             <div className="profile-image-section">
                                 <div className="profile-image-wrapper editable">
                                     <img 
-                                        src={imagePreview || 'https://via.placeholder.com/150?text=No+Image'} 
+                                        src={imagePreview || 'https://placehold.co/150?text=No+Image'} 
                                         alt="Profile Preview" 
                                         className="profile-image" 
                                     />
@@ -171,7 +171,7 @@ const UserProfile = () => {
                             <div className="profile-image-section">
                                 <div className="profile-image-wrapper">
                                     <img 
-                                        src={profile.profileImage || 'https://via.placeholder.com/150?text=No+Image'} 
+                                        src={profile.profileImage || 'https://placehold.co/150?text=No+Image'} 
                                         alt="Profile" 
                                         className="profile-image" 
                                     />

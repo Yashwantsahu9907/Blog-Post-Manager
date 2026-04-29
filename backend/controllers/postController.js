@@ -1,5 +1,6 @@
 const Post = require('../models/Post');
 const { Parser } = require('json2csv');
+const sanitizeHtml = require('sanitize-html');
 
 // @desc    Get all posts (with pagination, search, filter)
 // @route   GET /api/posts
@@ -79,6 +80,19 @@ const getPostById = async (req, res) => {
 const createPost = async (req, res) => {
     try {
         req.body.user = req.user.id;
+        
+        // Sanitize content
+        if (req.body.content) {
+            req.body.content = sanitizeHtml(req.body.content, {
+                allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'span']),
+                allowedAttributes: {
+                    ...sanitizeHtml.defaults.allowedAttributes,
+                    '*': ['style', 'class'],
+                    'img': ['src', 'alt', 'width', 'height']
+                }
+            });
+        }
+
         const post = new Post(req.body);
         const createdPost = await post.save();
         res.status(201).json(createdPost);
@@ -101,6 +115,18 @@ const updatePost = async (req, res) => {
         // Check user
         if (post.user?.toString() !== req.user.id && req.user.role !== 'Admin') {
             return res.status(401).json({ message: 'Not authorized to update this post' });
+        }
+
+        // Sanitize content
+        if (req.body.content) {
+            req.body.content = sanitizeHtml(req.body.content, {
+                allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'span']),
+                allowedAttributes: {
+                    ...sanitizeHtml.defaults.allowedAttributes,
+                    '*': ['style', 'class'],
+                    'img': ['src', 'alt', 'width', 'height']
+                }
+            });
         }
 
         const updatedPost = await Post.findByIdAndUpdate(

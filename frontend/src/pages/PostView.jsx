@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import DOMPurify from 'dompurify';
 import { ArrowLeft, Edit, Trash2, Calendar, User, Mail, Tag, Folder } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getPost, deletePost } from '../api/postService';
@@ -104,9 +105,11 @@ const PostView = () => {
                         {post.shortDescription}
                     </div>
 
-                    <div style={{ color: 'var(--text-primary)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
-                        {post.content}
-                    </div>
+                    <div 
+                        className="post-content"
+                        style={{ color: 'var(--text-primary)', lineHeight: 1.8 }}
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+                    />
                 </div>
             </div>
         </div>
