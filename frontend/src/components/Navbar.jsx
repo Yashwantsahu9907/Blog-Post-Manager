@@ -23,7 +23,10 @@ const Navbar = () => {
           BlogManager
         </Link>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <Link to="/posts" style={{ fontWeight: location.pathname === '/posts' || location.pathname === '/' ? '600' : '400', color: location.pathname === '/posts' || location.pathname === '/' ? 'var(--primary-color)' : 'var(--text-secondary)' }}>
+          <Link to="/" style={{ fontWeight: location.pathname === '/' ? '600' : '400', color: location.pathname === '/' ? 'var(--primary-color)' : 'var(--text-secondary)' }}>
+            Home
+          </Link>
+          <Link to="/posts" style={{ fontWeight: location.pathname === '/posts' ? '600' : '400', color: location.pathname === '/posts' ? 'var(--primary-color)' : 'var(--text-secondary)' }}>
             Posts
           </Link>
           {user ? (
@@ -37,10 +40,17 @@ const Navbar = () => {
                   </Link>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem', paddingLeft: '1rem', borderLeft: '1px solid var(--border-color)' }}>
-                    <span style={{ fontSize: '0.875rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <User size={16} /> {user.name}
-                    </span>
-                    <button onClick={handleLogout} className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>
+                    <Link to="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <span style={{ fontSize: '0.875rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.25rem', cursor: 'pointer' }} title="View Profile">
+                            {user.profileImage ? (
+                                <img src={user.profileImage} alt="Profile" style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' }} />
+                            ) : (
+                                <User size={16} />
+                            )}
+                            {user.name}
+                        </span>
+                    </Link>
+                    <button onClick={handleLogout} className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', marginLeft: '0.5rem' }}>
                         <LogOut size={14} /> Logout
                     </button>
                 </div>

@@ -12,6 +12,13 @@ export const getPost = async (id) => {
     return response.data;
 };
 
+export const getUserPosts = async () => {
+    // We assume getAuthHeaders from authService or AuthContext applies interceptor, 
+    // actually interceptor in AuthContext handles headers.
+    const response = await axios.get(`${API_URL}/my-posts`);
+    return response.data;
+};
+
 export const createPost = async (postData) => {
     const response = await axios.post(API_URL, postData);
     return response.data;

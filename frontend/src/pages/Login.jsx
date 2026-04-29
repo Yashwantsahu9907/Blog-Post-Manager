@@ -13,7 +13,7 @@ const Login = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const from = location.state?.from?.pathname || '/posts';
+    const from = location.state?.from?.pathname || '/';
 
     const onSubmit = async (data) => {
         try {

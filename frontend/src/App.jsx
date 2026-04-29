@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import Home from './pages/Home';
 import PostList from './pages/PostList';
 import PostForm from './pages/PostForm';
 import PostView from './pages/PostView';
@@ -8,6 +9,7 @@ import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProtectedRoute from './components/ProtectedRoute';
+import UserProfile from './pages/UserProfile';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminPosts from './pages/admin/AdminPosts';
@@ -24,7 +26,7 @@ function AppContent() {
       {!isAdminRoute && <Navbar />}
       <main className={!isAdminRoute ? "container" : ""} style={!isAdminRoute ? { padding: '2rem 1rem' } : {}}>
         <Routes>
-          <Route path="/" element={<PostList />} />
+          <Route path="/" element={<Home />} />
           <Route path="/posts" element={<PostList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -39,6 +41,11 @@ function AppContent() {
             </ProtectedRoute>
           } />
           <Route path="/posts/view/:id" element={<PostView />} />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <UserProfile />
+            </ProtectedRoute>
+          } />
           
           {/* Admin Routes */}
           <Route path="/admin" element={

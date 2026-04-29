@@ -18,7 +18,7 @@ const Signup = () => {
             const user = await registerUser(data);
             login(user);
             toast.success('Account created successfully!');
-            navigate('/posts');
+            navigate('/');
         } catch (error) {
             toast.error(error.response?.data?.message || 'Failed to sign up');
         } finally {

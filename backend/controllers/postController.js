@@ -46,6 +46,18 @@ const getPosts = async (req, res) => {
     }
 };
 
+// @desc    Get user's posts
+// @route   GET /api/posts/my-posts
+// @access  Private
+const getUserPosts = async (req, res) => {
+    try {
+        const posts = await Post.find({ user: req.user._id }).sort({ createdAt: -1 });
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 // @desc    Get a single post
 // @route   GET /api/posts/:id
 // @access  Public
@@ -161,6 +173,7 @@ const exportPostsToCSV = async (req, res) => {
 
 module.exports = {
     getPosts,
+    getUserPosts,
     getPostById,
     createPost,
     updatePost,
