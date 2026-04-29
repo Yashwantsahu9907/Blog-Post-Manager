@@ -1,4 +1,4 @@
-# 🚀 Premium MERN Blog Management System
+#  MERN Blog Management System
 
 A full-stack, production-ready blogging platform built with the MERN ecosystem (MongoDB, Express, React, Node.js). This system features a sophisticated Admin Panel, Rich Text editing, and seamless Cloudinary media integration.
 
