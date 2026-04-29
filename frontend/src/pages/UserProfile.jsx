@@ -8,7 +8,8 @@ import { User, Mail, Calendar, Edit3, Camera, FileText, Trash2, Edit } from 'luc
 import './UserProfile.css';
 
 const UserProfile = () => {
-    const { user, setUser } = useContext(AuthContext);
+    const { user, updateUser } = useContext(AuthContext);
+
     const [profile, setProfile] = useState(null);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -69,8 +70,9 @@ const UserProfile = () => {
 
             const newProfile = await updateUserProfile(updatedData);
             setProfile(newProfile);
-            setUser({ ...user, ...newProfile }); // Update global auth context
+            updateUser(newProfile); // Update global auth context
             setIsEditing(false);
+
             setImageFile(null);
             toast.success('Profile updated successfully');
         } catch (error) {

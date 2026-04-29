@@ -1,45 +1,34 @@
-import axios from 'axios';
+import api from './api';
 
-const API_URL = 'http://localhost:5000/api/admin';
-
-const getAuthHeaders = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.token) {
-        return {
-            headers: { Authorization: `Bearer ${user.token}` }
-        };
-    }
-    return {};
-};
+const API_URL = '/admin';
 
 export const getDashboardMetrics = async () => {
-    const response = await axios.get(`${API_URL}/dashboard`, getAuthHeaders());
+    const response = await api.get(`${API_URL}/dashboard`);
     return response.data;
 };
 
 export const getUsers = async () => {
-    const response = await axios.get(`${API_URL}/users`, getAuthHeaders());
+    const response = await api.get(`${API_URL}/users`);
     return response.data;
 };
 
 export const updateUser = async (id, userData) => {
-    const response = await axios.put(`${API_URL}/users/${id}`, userData, getAuthHeaders());
+    const response = await api.put(`${API_URL}/users/${id}`, userData);
     return response.data;
 };
 
 export const deleteUser = async (id) => {
-    const response = await axios.delete(`${API_URL}/users/${id}`, getAuthHeaders());
+    const response = await api.delete(`${API_URL}/users/${id}`);
     return response.data;
 };
 
 export const getAdminPosts = async (params) => {
-    const config = getAuthHeaders();
-    config.params = params;
-    const response = await axios.get(`${API_URL}/posts`, config);
+    const response = await api.get(`${API_URL}/posts`, { params });
     return response.data;
 };
 
 export const updatePostApproval = async (id, approvalStatus) => {
-    const response = await axios.put(`${API_URL}/posts/${id}/approve`, { approvalStatus }, getAuthHeaders());
+    const response = await api.put(`${API_URL}/posts/${id}/approve`, { approvalStatus });
     return response.data;
 };
+

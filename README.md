@@ -79,4 +79,49 @@ A full-stack, production-ready blogging platform built with the MERN ecosystem (
    npm install
    npm run dev
    ```
+<<<<<<< HEAD
+=======
+
+## 🚀 Production Deployment Guide (Render)
+
+This project is optimized for deployment on [Render](https://render.com). Follow these steps to go live:
+
+### 1. Database Setup (MongoDB Atlas)
+- Create a cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+- Whitelist all IP addresses (`0.0.0.0/0`) in Network Access.
+- Copy your connection string and replace `<password>` with your actual password.
+
+### 2. Backend Deployment
+- Create a new **Web Service** on Render.
+- Connect your GitHub repository.
+- **Root Directory**: `backend`
+- **Build Command**: `npm install`
+- **Start Command**: `npm start`
+- **Environment Variables**: Add the following in the Render dashboard:
+  - `MONGO_URI`: Your MongoDB Atlas URI
+  - `JWT_SECRET`: A random secure string
+  - `CLOUDINARY_CLOUD_NAME`: Your Cloudinary Cloud Name
+  - `CLOUDINARY_API_KEY`: Your Cloudinary API Key
+  - `CLOUDINARY_API_SECRET`: Your Cloudinary API Secret
+  - `FRONTEND_URL`: The URL of your deployed frontend (e.g., `https://myblog.onrender.com`)
+  - `NODE_ENV`: `production`
+
+### 3. Frontend Deployment
+- Create a new **Static Site** on Render.
+- Connect your GitHub repository.
+- **Root Directory**: `frontend`
+- **Build Command**: `npm install && npm run build`
+- **Publish Directory**: `dist`
+- **Environment Variables**:
+  - `VITE_API_BASE_URL`: Your deployed backend URL + `/api` (e.g., `https://myblog-api.onrender.com/api`)
+
+### 4. Verification
+- Once both are deployed, update the `FRONTEND_URL` in the Backend service with the actual URL from the Static Site.
+- Your app should now be fully functional in production!
+
+## 📜 License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+>>>>>>> 40d13fc (fixed the error)
 Built with ❤️ by Yashwant Sahu
