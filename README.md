@@ -119,9 +119,4 @@ This project is optimized for deployment on [Render](https://render.com). Follow
 - Once both are deployed, update the `FRONTEND_URL` in the Backend service with the actual URL from the Static Site.
 - Your app should now be fully functional in production!
 
-## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
->>>>>>> 40d13fc (fixed the error)
 Built with ❤️ by Yashwant Sahu
