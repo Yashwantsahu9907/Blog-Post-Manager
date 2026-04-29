@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Download, Eye, Edit, Trash2, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { getPosts, deletePost, exportPosts } from '../api/postService';
+import { AuthContext } from '../context/AuthContext';
 
 const PostList = () => {
+    const { user } = useContext(AuthContext);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -75,9 +77,11 @@ const PostList = () => {
                     <button className="btn btn-secondary" onClick={handleExport}>
                         <Download size={16} /> Export CSV
                     </button>
-                    <Link to="/posts/add" className="btn btn-primary">
-                        <Plus size={16} /> Add Post
-                    </Link>
+                    {user && (
+                        <Link to="/posts/add" className="btn btn-primary">
+                            <Plus size={16} /> Add Post
+                        </Link>
+                    )}
                 </div>
             </div>
 
@@ -148,12 +152,16 @@ const PostList = () => {
                                             <Link to={`/posts/view/${post._id}`} className="btn btn-secondary" style={{ padding: '0.375rem' }}>
                                                 <Eye size={16} />
                                             </Link>
-                                            <Link to={`/posts/edit/${post._id}`} className="btn btn-secondary" style={{ padding: '0.375rem' }}>
-                                                <Edit size={16} />
-                                            </Link>
-                                            <button onClick={() => handleDelete(post._id)} className="btn btn-danger" style={{ padding: '0.375rem' }}>
-                                                <Trash2 size={16} />
-                                            </button>
+                                            {user && (user.role === 'Admin' || user._id === post.user) && (
+                                                <>
+                                                    <Link to={`/posts/edit/${post._id}`} className="btn btn-secondary" style={{ padding: '0.375rem' }}>
+                                                        <Edit size={16} />
+                                                    </Link>
+                                                    <button onClick={() => handleDelete(post._id)} className="btn btn-danger" style={{ padding: '0.375rem' }}>
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

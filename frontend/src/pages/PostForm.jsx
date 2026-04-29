@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { getPost, createPost, updatePost } from '../api/postService';
+import { AuthContext } from '../context/AuthContext';
 
 const PostForm = () => {
+    const { user } = useContext(AuthContext);
     const { id } = useParams();
     const navigate = useNavigate();
     const isEditMode = Boolean(id);
@@ -13,7 +15,9 @@ const PostForm = () => {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({
         defaultValues: {
             status: 'Draft',
-            tags: ''
+            tags: '',
+            authorName: user?.name || '',
+            email: user?.email || '',
         }
     });
 

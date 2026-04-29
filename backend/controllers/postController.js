@@ -9,7 +9,7 @@ const getPosts = async (req, res) => {
         const { page = 1, limit = 10, search, category, status } = req.query;
 
         // Build query
-        const query = {};
+        const query = { approvalStatus: 'Approved' };
         
         if (search) {
             query.$or = [
@@ -66,6 +66,7 @@ const getPostById = async (req, res) => {
 // @access  Public
 const createPost = async (req, res) => {
     try {
+        req.body.user = req.user.id;
         const post = new Post(req.body);
         const createdPost = await post.save();
         res.status(201).json(createdPost);
@@ -83,6 +84,11 @@ const updatePost = async (req, res) => {
 
         if (!post) {
             return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // Check user
+        if (post.user?.toString() !== req.user.id && req.user.role !== 'Admin') {
+            return res.status(401).json({ message: 'Not authorized to update this post' });
         }
 
         const updatedPost = await Post.findByIdAndUpdate(
@@ -106,6 +112,11 @@ const deletePost = async (req, res) => {
 
         if (!post) {
             return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // Check user
+        if (post.user?.toString() !== req.user.id && req.user.role !== 'Admin') {
+            return res.status(401).json({ message: 'Not authorized to delete this post' });
         }
 
         await post.deleteOne();

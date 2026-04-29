@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ArrowLeft, Edit, Trash2, Calendar, User, Mail, Tag, Folder } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getPost, deletePost } from '../api/postService';
+import { AuthContext } from '../context/AuthContext';
 
 const PostView = () => {
+    const { user } = useContext(AuthContext);
     const { id } = useParams();
     const navigate = useNavigate();
     const [post, setPost] = useState(null);
@@ -69,14 +71,16 @@ const PostView = () => {
                             </div>
                             <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.2 }}>{post.title}</h1>
                         </div>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <Link to={`/posts/edit/${post._id}`} className="btn btn-secondary">
-                                <Edit size={16} /> Edit
-                            </Link>
-                            <button onClick={handleDelete} className="btn btn-danger">
-                                <Trash2 size={16} /> Delete
-                            </button>
-                        </div>
+                        {user && (user.role === 'Admin' || user._id === post.user) && (
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <Link to={`/posts/edit/${post._id}`} className="btn btn-secondary">
+                                    <Edit size={16} /> Edit
+                                </Link>
+                                <button onClick={handleDelete} className="btn btn-danger">
+                                    <Trash2 size={16} /> Delete
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '2rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1.5rem' }}>
