@@ -41,3 +41,14 @@ export const exportPosts = async (params) => {
     });
     return response.data;
 };
+
+export const uploadPostImage = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const response = await axios.post(`${API_URL}/upload`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data.imageUrl;
+};

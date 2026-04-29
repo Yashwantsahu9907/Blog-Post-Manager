@@ -4,8 +4,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-import { getPost, createPost, updatePost } from '../api/postService';
-import { uploadProfileImage } from '../api/authService';
+import { getPost, createPost, updatePost, uploadPostImage } from '../api/postService';
 import { AuthContext } from '../context/AuthContext';
 
 const PostForm = () => {
@@ -14,6 +13,8 @@ const PostForm = () => {
     const navigate = useNavigate();
     const isEditMode = Boolean(id);
     const [loading, setLoading] = useState(false);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [uploadingImage, setUploadingImage] = useState(false);
 
     const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
         defaultValues: {
@@ -38,7 +39,7 @@ const PostForm = () => {
             if (file) {
                 try {
                     toast.loading('Uploading image...', { id: 'quill-upload' });
-                    const imageUrl = await uploadProfileImage(file);
+                    const imageUrl = await uploadPostImage(file);
                     
                     const quill = quillRef.current.getEditor();
                     const range = quill.getSelection();
@@ -94,6 +95,9 @@ const PostForm = () => {
                             setValue(key, data[key]);
                         }
                     });
+                    if (data.thumbnailUrl) {
+                        setImagePreview(data.thumbnailUrl);
+                    }
                 } catch (error) {
                     toast.error('Failed to fetch post details');
                     navigate('/posts');
@@ -125,6 +129,31 @@ const PostForm = () => {
             toast.error(error.response?.data?.message || 'Failed to save post');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleThumbnailChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+
+            // Upload
+            try {
+                setUploadingImage(true);
+                const imageUrl = await uploadPostImage(file); // Reusing existing upload service
+                setValue('thumbnailUrl', imageUrl);
+                toast.success('Thumbnail uploaded successfully');
+            } catch (error) {
+                toast.error('Failed to upload thumbnail');
+                setImagePreview(null);
+            } finally {
+                setUploadingImage(false);
+            }
         }
     };
 
@@ -215,16 +244,31 @@ const PostForm = () => {
                 <div className="card" style={{ marginBottom: '1.5rem' }}>
                     <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>Media</h2>
                     <div className="form-group">
-                        <label className="form-label">Thumbnail URL</label>
+                        <label className="form-label">Thumbnail Image</label>
+                        <div style={{ marginBottom: '1rem' }}>
+                            {imagePreview ? (
+                                <div style={{ position: 'relative', width: '100%', maxWidth: '300px', height: '200px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                                    <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    {uploadingImage && (
+                                        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Uploading...</span>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div style={{ width: '100%', maxWidth: '300px', height: '200px', borderRadius: '8px', border: '2px dashed var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f9fafb', color: 'var(--text-secondary)' }}>
+                                    No image selected
+                                </div>
+                            )}
+                        </div>
                         <input 
-                            type="url" 
+                            type="file" 
+                            accept="image/*"
                             className="form-control" 
-                            placeholder="https://example.com/image.jpg"
-                            {...register('thumbnailUrl', { 
-                                required: 'Thumbnail URL is required',
-                                pattern: { value: /^https?:\/\/.+/, message: 'Must be a valid URL' }
-                            })} 
+                            onChange={handleThumbnailChange}
+                            disabled={uploadingImage}
                         />
+                        <input type="hidden" {...register('thumbnailUrl', { required: 'Thumbnail is required' })} />
                         {errors.thumbnailUrl && <span className="form-error">{errors.thumbnailUrl.message}</span>}
                     </div>
                 </div>

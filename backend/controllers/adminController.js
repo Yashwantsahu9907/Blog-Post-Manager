@@ -124,14 +124,16 @@ const getPosts = async (req, res) => {
 const updatePostApproval = async (req, res) => {
     try {
         const { approvalStatus } = req.body;
-        const post = await Post.findById(req.params.id);
+        
+        const updatedPost = await Post.findByIdAndUpdate(
+            req.params.id,
+            { approvalStatus },
+            { new: true, runValidators: true }
+        );
 
-        if (!post) {
+        if (!updatedPost) {
             return res.status(404).json({ message: 'Post not found' });
         }
-
-        post.approvalStatus = approvalStatus;
-        const updatedPost = await post.save();
 
         res.status(200).json(updatedPost);
     } catch (error) {
