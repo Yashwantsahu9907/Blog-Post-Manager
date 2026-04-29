@@ -79,9 +79,4 @@ A full-stack, production-ready blogging platform built with the MERN ecosystem (
    npm install
    npm run dev
    ```
-
-## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
 Built with ❤️ by Yashwant Sahu
