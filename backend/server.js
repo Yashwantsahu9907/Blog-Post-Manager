@@ -32,9 +32,21 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+const path = require('path');
+
 app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/users', require('./routes/authRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
+
+// Serve frontend static files
+// This assumes your React app is built into the frontend/dist folder
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Catch-all route for SPA routing
+// Any request that doesn't match an API route will return the React index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
 
 app.use(errorHandler);
 
