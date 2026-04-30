@@ -11,6 +11,7 @@ services:
         value: production
       - key: PORT
         value: 5000
+        
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET
