@@ -43,7 +43,7 @@ A full-stack, production-ready blogging platform built with the MERN ecosystem (
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Prerequisites:
 - Node.js (v18+)
 - MongoDB (Local or Atlas)
 - Cloudinary Account
