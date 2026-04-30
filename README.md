@@ -48,6 +48,7 @@ A full-stack, production-ready blogging platform built with the MERN ecosystem (
 - MongoDB (Local or Atlas)
 - Cloudinary Account
 
+
 ### 📦 Installation
 
 1. **Clone the repository**
