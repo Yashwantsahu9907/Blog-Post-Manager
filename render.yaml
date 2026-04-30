@@ -1,7 +1,7 @@
 services:
   - type: web
     name: blog-api
-    env: node
+    runtime: node
     plan: free
     rootDir: backend
     buildCommand: npm install
@@ -30,7 +30,7 @@ services:
 
   - type: web
     name: blog-frontend
-    env: static
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
