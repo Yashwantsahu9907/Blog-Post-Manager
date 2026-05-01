@@ -2,7 +2,7 @@
 
 A full-stack, production-ready blogging platform built with the MERN ecosystem (MongoDB, Express, React, Node.js). This system features a sophisticated Admin Panel, Rich Text editing, and seamless Cloudinary media integration.
 
-![Banner](https://blog-frontend-zmxt.onrender.com/)
+![Banner](https://placehold.co/1200x400?text=Blog+Post+Manager)
 
 ## ✨ Core Features
 
