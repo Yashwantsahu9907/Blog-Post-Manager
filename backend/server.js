@@ -38,15 +38,24 @@ app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/users', require('./routes/authRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
-// Serve frontend static files
-// This assumes your React app is built into the frontend/dist folder
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Serve frontend static files if they exist
+const frontendDistPath = path.join(__dirname, '../frontend/dist');
+const fs = require('fs');
 
-// Catch-all route for SPA routing
-// Any request that doesn't match an API route will return the React index.html
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-});
+if (fs.existsSync(frontendDistPath)) {
+    app.use(express.static(frontendDistPath));
+
+    // Catch-all route for SPA routing
+    // Any request that doesn't match an API route will return the React index.html
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(frontendDistPath, 'index.html'));
+    });
+} else {
+    // If frontend is not built/served here, return 404 for unknown routes
+    app.use('*', (req, res) => {
+        res.status(404).json({ message: 'Route not found' });
+    });
+}
 
 app.use(errorHandler);
 
