@@ -46,13 +46,13 @@ if (fs.existsSync(frontendDistPath)) {
     app.use(express.static(frontendDistPath));
 
     // Catch-all route for SPA routing
-    // Any request that doesn't match an API route will return the React index.html
-    app.get('*', (req, res) => {
+    // Express 5 requires named parameters for wildcards
+    app.get('/{*splat}', (req, res) => {
         res.sendFile(path.join(frontendDistPath, 'index.html'));
     });
 } else {
     // If frontend is not built/served here, return 404 for unknown routes
-    app.use('*', (req, res) => {
+    app.use((req, res) => {
         res.status(404).json({ message: 'Route not found' });
     });
 }
